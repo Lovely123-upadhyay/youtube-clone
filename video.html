@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surajtube</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body onload="playVideo()">
+    <nav class="flex-div">
+        <div class="nav-left flex-div">
+            <a href="index.html"> <img src="images/menu.png" class="menu_icon" alt=""></a>
+            <a href="index.html"><img src="https://static.vecteezy.com/system/resources/previews/003/206/623/original/youtube-editorial-app-icon-free-vector.jpg" class="logo" alt=""></a> 
+        </div>
+        <div class="nav-middle flex-div">
+         <div class="search-box flex-div">
+            <input type="text" placeholder="Search" id="query">
+            <img src="images/search.png" onclick="search()" alt="">
+            <!-- <button class="sort_btn" onclick="sort()">sort by name</button> -->
+         </div>
+         <img src="images/voice-search.png" class="mic-icon" alt="">
+        </div>
+        <div class="nav-right flex-div">
+            <img src="images/upload.png" alt="">
+            <img src="images/more.png" alt="">
+            <img src="images/notification.png" alt="">
+            <img src="images/Jack.png" class="user-icon" alt="">
+        </div>
+    </nav>
+    <!-- navbar end -->
+    <div class="container play-container">
+        <div class="row">
+            <div class="play-video">
+                <!-- <video controls autoplay>
+                    <source src="images/video.mp4" type="video/mp4">
+                </video> -->
+                <iframe width="100%" height="500px" id="playvideo"  title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="tags">
+                    <a href="">#movie</a>  <a href="">#thor</a> <a href="">#Trending</a>
+                </div>
+                <h3 id="title"></h3>
+                <div class="play-video-info">
+                    <p>1225 Views &bull; 2 days ago</p>
+                    <div>
+                        <a href="#"><img src="images/like.png" onclick="count()" alt=""><span id="coo">124</span></a>
+                        <a href="#"><img src="images/dislike.png" onclick="countmin()" alt=""><span id="coo1">15</span></a>
+
+                        <a href=""><img src="images/share.png" alt="">Share</a>
+
+                        <a href=""><img src="images/save.png" alt="">Save</a>
+
+                    </div>
+                </div>
+                <hr>
+                <div class="publisher">
+                    <img src="images/Jack.png" alt="">
+                    <div>
+                        <p id="cname">suraj</p>
+                        <span>500k Subscribers</span>
+                    </div>
+                    <button type="button">Subscribe</button>
+                </div>
+                <div class="vid-description">
+                    <p>Channel that make learning easy</p>
+                    <p id="des">hellobdshbjsdbdsbh jidsjkkj dshkdsdk dshd s dh</p>
+                    <hr>
+                    <h4>134 comments</h4>
+
+                    <div class="add-comment">
+                        <img src="images/Jack.png" alt="">
+                        <input type="text" placeholder="Write comments...">
+                    </div>
+                    <div class="old-comment">
+                        <img src="images/megan.png" alt="">
+                        <div>
+                            <h3>Megha <span>2 days ago</span></h3>
+                            <p>Awesome video h suraj bhai subscribe cse lectures by suraj</p>
+                            <div class="cmt-sction">
+                                <img src="images/like.png" alt="">
+                                <span>244</span>
+                                <img src="images/dislike.png" alt="">
+                                <span>2</span>
+                                <span>REPLY</span>
+                                <a href="">All Replies</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="old-comment">
+                        <img src="images/Jack.png" alt="">
+                        <div>
+                            <h3>Suraj <span>2 days ago</span></h3>
+                            <p>Awesome video h suraj bhai subscribe cse lectures by suraj</p>
+                            <div class="cmt-sction">
+                                <img src="images/like.png" alt="">
+                                <span>244</span>
+                                <img src="images/dislike.png" alt="">
+                                <span>2</span>
+                                <span>REPLY</span>
+                                <a href="">All Replies</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right-sidebar">
+                <button id="chat">SHOW CHAT REPLAY</button>
+                <div class="slid">
+                    <p>All</p>
+                    <p>Java script</p>
+                    <p>Mixes</p>
+                    <p>Buses</p>
+                    <p>Music</p>
+                  
+                    
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+    <p id="copy">© 2022 Suraj</p>
+</body>
+</html>
+<script>
+    let playVideo = () =>{
+    let myvideo = JSON.parse(localStorage.getItem("video"));
+        // console.log(myvideo)
+     let id = myvideo.id.videoId;
+     let play = document.getElementById("playvideo")
+      play.src = `https://www.youtube.com/embed/${id}`
+     
+    }
+
+    let popular=async()=>{
+    let url=`https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=20&key=AIzaSyAEu1A260aZeViZRqZeXIfjIaXMlySStUY`
+    let res = await fetch(url)
+    let data = await res.json();
+    // console.log(data.items)
+    appended(data.items)
+  }
+var data = JSON.parse(localStorage.getItem("trenddata"))
+
+  let appended = (data) => {
+    let conta = document.querySelector(".right-sidebar")
+    // conta.innerHTML = null;
+//   console.log(data)
+    data.forEach((el) => {
+        // console.log(el)
+        let img = document.createElement("img");
+        img.src = el.snippet.thumbnails.medium.url;
+        let h3 = document.createElement("h3")
+        h3.innerText = el.snippet.title;
+        let div = document.createElement("div");
+        div.onclick = () => {
+            saveVideo(el)
+        }
+        div.setAttribute("class", "video")
+        div.append(img, h3)
+        conta.append(div)
+    })
+}
+
+let search =() =>{
+    window.location.href = "index.html"
+}
+let saveVideo = (data) => {
+    localStorage.setItem("video", JSON.stringify(data));
+    window.location.reload()
+}
+popular()
+// appended(data)
+
+var arr = {
+    "kind": "youtube#searchResult",
+    "etag": "uA_mUMOsZQ7rysG9CwD2ADHIEYI",
+    "id": {
+        "kind": "youtube#video",
+        "videoId": "qSHZxNR_qmA"
+    },
+    "snippet": {
+        "publishedAt": "2021-07-15T05:14:56Z",
+        "channelId": "UCjX8LVXq46L30vPgTQJk84A",
+        "title": "Chris Hemsworth  reaction to frog Thor (Thorg) in Loki",
+        "description": "Chris Hemsworth reaction to frog Thor (Thorg) in Loki.",
+        "thumbnails": {
+            "default": {
+                "url": "https://i.ytimg.com/vi/qSHZxNR_qmA/default.jpg",
+                "width": 120,
+                "height": 90
+            },
+            "medium": {
+                "url": "https://i.ytimg.com/vi/qSHZxNR_qmA/mqdefault.jpg",
+                "width": 320,
+                "height": 180
+            },
+            "high": {
+                "url": "https://i.ytimg.com/vi/qSHZxNR_qmA/hqdefault.jpg",
+                "width": 480,
+                "height": 360
+            }
+        },
+        "channelTitle": "MrBeast2",
+        "liveBroadcastContent": "none",
+        "publishTime": "2021-07-15T05:14:56Z"
+    }
+}
+
+let change = () => {
+    let disda = JSON.parse(localStorage.getItem("video"));
+   document.getElementById("cname").innerText = disda.snippet.channelTitle
+   document.getElementById("des").innerText = disda.snippet.description
+   document.getElementById("title").innerText = disda.snippet.title
+}
+change()
+ function count(){
+  var count = document.getElementById("coo").innerText
+  count++
+  document.getElementById("coo").innerText = count
+ }
+ function countmin(){
+  var count = document.getElementById("coo1").innerText
+  count--
+  document.getElementById("coo1").innerText = count
+ }
+</script>
+
